@@ -1,0 +1,16 @@
+.chooser {
+  width: 240px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 700px) {
+  .chooser {
+    width: 100%;
+  }
+}
+
+/* .chooser .rmsc {
+  margin-left: auto;
+  margin-right: auto;
+} */

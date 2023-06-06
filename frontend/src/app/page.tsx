@@ -1,94 +1,106 @@
-import Image from 'next/image'
+"use client";
+
+import { useState, useEffect } from 'react';
+import useSWR from 'swr'
+
+import { Person } from '@/types';
 import styles from './page.module.css'
+import SearchSelectFilter from '@/components/SearchSelectFilter'
+import SearchInputFilter from '@/components/SearchInputFilter'
+import Record from '@/components/Record'
+
+const BASE_URL = 'http://localhost:8888/';
+// const fetcher = (url) => fetch(url).then((res) => res.json());
+
+const fetcher = async (url: string) => {
+  return fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      return data;
+    })
+}
 
 export default function Home() {
+/*
+  TODO: 
+*/
+
+  //const [filteredCountries, setFilteredCountries] = useState([]);
+
+  const [selectedCountries, setSelectedCountries] = useState([]);
+  const [seachText, setSearchText] = useState('');
+  // const [data, setData] = useState([]);
+
+  const { data = [], error, isLoading } = useSWR(
+    "http://localhost:8888",
+    fetcher
+  );
+
+  const selectedCountriesFlat = selectedCountries.map(c => c.label);
+  
+  let countries = [];
+  if (data && data['display_countries']) {
+    countries = data['display_countries'];
+  }
+
+  let filteredData: Person[] = [];
+  if (data && data['data']) {
+    data.data.forEach((person: Person) => {
+      // If user has selected any countries from the dropdown, only display those users.
+      if (selectedCountriesFlat.length == 0 || selectedCountriesFlat.includes(person.country)) {
+        filteredData.push(person)
+      }
+    });
+  }
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const response = fetch(BASE_URL);
+  //     const data = await (await response).json();
+  //     setData(data);
+  //   };
+
+  //   fetchData();
+  // }, [selectedCountries])
+
+  //const countries: string[] = [];
+  // const filteredData: Person[] = [];
+
+  // console.log('selectedCountriesFlat', selectedCountriesFlat);
+
+  // data.forEach((person: Person) => {
+  //   // Building list of available countries to filter by
+  //   if (!countries.includes(person.country)) {
+  //     countries.push(person.country);
+  //   }
+
+  //   // If user has selected any countries from the dropdown, only display those users.
+  //   if (selectedCountriesFlat.length == 0 || selectedCountriesFlat.includes(person.country)) {
+  //     filteredData.push(person)
+  //   }
+  // });
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <main className={styles.container}>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+      <header className={styles.header}>
+
+        <SearchInputFilter />
+        <SearchSelectFilter
+          countries={countries}
+          selected={selectedCountries}
+          onChange={setSelectedCountries}
         />
-      </div>
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+      </header>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+      <div className={styles.records}>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
+        {filteredData && filteredData.map((record: Person)  => {
+          return <Record key={record.id} data={record} />
+        })}
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
       </div>
     </main>
   )

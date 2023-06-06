@@ -1,0 +1,13 @@
+.record {
+  background: var(--color-purple-light);
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-sm);
+}
+
+.record p {
+  margin: 0 0 6px 0;
+}
+
+.record p:last-child {
+  margin-bottom: 0;
+}
