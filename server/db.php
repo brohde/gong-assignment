@@ -20,14 +20,14 @@ function db_filter_by_countries($countries = []) {
 
   $list = $countries;
   
-  $in = str_repeat('?,', count($list) - 1) . '?'; // placeholders
-  $sql = "SELECT id, first_name, last_name, email, country FROM MOCK_DATA WHERE country IN ($in) ORDER BY last_name, first_name"; // sql
-  $stmt = $conn->prepare($sql); // prepare
-  $types = str_repeat('s', count($list)); //types
-  $stmt->bind_param($types, ...$list); // bind array at once
+  $in = str_repeat('?,', count($list) - 1) . '?';
+  $sql = "SELECT id, first_name, last_name, email, country FROM MOCK_DATA WHERE country IN ($in) ORDER BY last_name, first_name";
+  $stmt = $conn->prepare($sql);
+  $types = str_repeat('s', count($list));
+  $stmt->bind_param($types, ...$list);
   $stmt->execute();
-  $result = $stmt->get_result(); // get the mysqli result
-  $rows = $result->fetch_all(MYSQLI_ASSOC); // fetch the data   
+  $result = $stmt->get_result();
+  $rows = $result->fetch_all(MYSQLI_ASSOC);
 
   header('Content-Type: application/json');
   echo json_encode(array(
