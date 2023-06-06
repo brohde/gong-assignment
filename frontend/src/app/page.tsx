@@ -46,8 +46,8 @@ export default function Home() {
   // Since the API will return the full dataset, we have to filter it client side.
   // Right now I've only implemented the Country filter, 
   let filteredData: Person[] = []
-  if (data && data['data']) {
-    data.data.forEach((person: Person) => {
+  if (data && data['records']) {
+    data.records.forEach((person: Person) => {
       // If user has selected any countries from the dropdown, only display those users.
       if (selectedCountriesFlat.length == 0 || selectedCountriesFlat.includes(person.country)) {
         filteredData.push(person)
