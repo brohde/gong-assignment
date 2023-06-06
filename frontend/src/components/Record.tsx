@@ -1,5 +1,5 @@
-import styles from './Record.module.css';
-import { Person } from '@/types';
+import styles from './Record.module.css'
+import { Person } from '@/types'
 
 export default function Record({ data }: { data: Person }) {
   return (

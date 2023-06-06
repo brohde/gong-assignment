@@ -2,49 +2,50 @@
 
 import { useState, useEffect } from 'react';
 import useSWR from 'swr'
-
-import { Person } from '@/types';
+import { Person } from '@/types'
+import { Option } from 'react-multi-select-component'
 import styles from './page.module.css'
 import SearchSelectFilter from '@/components/SearchSelectFilter'
 import SearchInputFilter from '@/components/SearchInputFilter'
 import Record from '@/components/Record'
 
-const BASE_URL = 'http://localhost:8888/';
-// const fetcher = (url) => fetch(url).then((res) => res.json());
+// TODO: Move this to an environment var
+const BASE_URL = 'http://localhost:8888/'
 
-const fetcher = async (url: string) => {
-  return fetch(url)
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(data);
-      return data;
-    })
-}
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 export default function Home() {
-/*
-  TODO: 
-*/
+  const [selectedCountries, setSelectedCountries] = useState<Option[]>([])
+  const [seachText, setSearchText] = useState('')
 
-  //const [filteredCountries, setFilteredCountries] = useState([]);
-
-  const [selectedCountries, setSelectedCountries] = useState([]);
-  const [seachText, setSearchText] = useState('');
-  // const [data, setData] = useState([]);
+  // To make this implementation simpler, I am retreiving the inital data set
+  // all at once (which satisfies the initial loading requirement). Ideally if
+  // I had more time, I might implement it as follows:
+  //  1. Load a subset of initial dataset to page (e.g. 40 records).
+  //  2. Implement pagination/load more feature.
+  //  3. When user filters by country, query API endpoint for data.
 
   const { data = [], error, isLoading } = useSWR(
-    "http://localhost:8888",
+    BASE_URL,
     fetcher
   );
 
-  const selectedCountriesFlat = selectedCountries.map(c => c.label);
+  // This is just to get you going in case the MAMP server isn't running.
+  // I would like to handle error and loading states more gracefully.
+  if (error) return <div>Make sure API server is running and accessible at {BASE_URL}.</div>
+
+  // Flatten the state value from Option[] to string[]
+  const selectedCountriesFlat = selectedCountries.map(c => c.value)
   
-  let countries = [];
+  // Grab list of countries provided by API that satisfies the instructions
+  let countries = []
   if (data && data['display_countries']) {
-    countries = data['display_countries'];
+    countries = data['display_countries']
   }
 
-  let filteredData: Person[] = [];
+  // Since the API will return the full dataset, we have to filter it client side.
+  // Right now I've only implemented the Country filter, 
+  let filteredData: Person[] = []
   if (data && data['data']) {
     data.data.forEach((person: Person) => {
       // If user has selected any countries from the dropdown, only display those users.
@@ -54,53 +55,21 @@ export default function Home() {
     });
   }
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response = fetch(BASE_URL);
-  //     const data = await (await response).json();
-  //     setData(data);
-  //   };
-
-  //   fetchData();
-  // }, [selectedCountries])
-
-  //const countries: string[] = [];
-  // const filteredData: Person[] = [];
-
-  // console.log('selectedCountriesFlat', selectedCountriesFlat);
-
-  // data.forEach((person: Person) => {
-  //   // Building list of available countries to filter by
-  //   if (!countries.includes(person.country)) {
-  //     countries.push(person.country);
-  //   }
-
-  //   // If user has selected any countries from the dropdown, only display those users.
-  //   if (selectedCountriesFlat.length == 0 || selectedCountriesFlat.includes(person.country)) {
-  //     filteredData.push(person)
-  //   }
-  // });
-
   return (
     <main className={styles.container}>
-
       <header className={styles.header}>
-
-        <SearchInputFilter />
+        <SearchInputFilter /> {/* Not implemented */}
         <SearchSelectFilter
           countries={countries}
           selected={selectedCountries}
           onChange={setSelectedCountries}
         />
-
       </header>
 
       <div className={styles.records}>
-
         {filteredData && filteredData.map((record: Person)  => {
           return <Record key={record.id} data={record} />
         })}
-
       </div>
     </main>
   )

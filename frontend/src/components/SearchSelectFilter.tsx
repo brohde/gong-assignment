@@ -1,25 +1,14 @@
-import { useState } from "react";
-import { MultiSelect, Option } from "react-multi-select-component";
-import styles from './SearchSelectFilter.module.css';
+import { MultiSelect, Option } from 'react-multi-select-component'
+import styles from './SearchSelectFilter.module.css'
 
-const options = [
-  { label: "Grapes 🍇", value: "grapes" },
-  { label: "Mango 🥭", value: "mango" },
-  { label: "Strawberry 🍓", value: "strawberry", disabled: true },
-];
-
-const customValueRenderer = (selected, _options) => {
+const customValueRenderer = (selected: Option[], _options: Option[]) => {
   return selected.length
-    ? selected.map(({ label }) => " ✔️ " + label)
-    : "All Countries";
+    ? selected.map(({ label }: { label: string }) => " ✔️ " + label)
+    : "All Countries"
 };
 
 export default function SearchSelectFilter({ countries, selected, onChange }: { countries: string[], selected: Option[], onChange: Function}) {
-  //const [selected, setSelected] = useState([]);
-
-  const options = countries.map(c => ({ label: c, value: c }));
-
-  console.log('**countries', countries, options);
+  const options = countries.map(c => ({ label: c, value: c }))
 
   return (
     <div className={styles.chooser}>
