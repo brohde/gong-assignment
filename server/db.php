@@ -1,5 +1,9 @@
 <?php
 
+// I don't love this code but it got me working towards connecting
+// to the database quickly. I prefer using an ORM, like what is offered
+// by Laravel.
+
 $conn = new mysqli($DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DB);
 
 if ($conn->connect_error) {
