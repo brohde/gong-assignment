@@ -18,12 +18,14 @@ Clone this repo and then follow the instructions below. Both `server` and `front
 
 ### frontend/
 
-1. Clone the repo
-2. `yarn install`
-3. `yarn dev`
+1. `cd frontend`
+2. `npm install`
+3. `npm run dev`
 4. Open [http://localhost:3000](http://localhost:3000) with your browser.
 
 ## Notes
 * Normally I would not build a project that relies on any user dependency like MAMP. It would be much better to build this in Docker so that installation is easier for the developer and to match the dev enviornment as closely as possible with production.
 * There is some FOUC (flash of unbehaviored content) when the front end page loads, since I am not handling the loading state gracefully.
+* The UI is not "perfect", I would like to add focus states to input elements, but I focused mostly on getting as close to the design as possible. The font doesn't match completely, and some colors have not been implemented.
+* Text search box has not been implemented.
 * See additional comments throughout code.
