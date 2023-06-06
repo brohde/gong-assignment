@@ -24,6 +24,6 @@ Clone this repo and then follow the instructions below. Both `server` and `front
 4. Open [http://localhost:3000](http://localhost:3000) with your browser.
 
 ## Notes
-* Normally I would not build a project that relies on MAMP. It would be much better to build this in Docker so that installation is easier for the developer and to match the dev enviornment as closely as possible with production.
+* Normally I would not build a project that relies on any user dependency like MAMP. It would be much better to build this in Docker so that installation is easier for the developer and to match the dev enviornment as closely as possible with production.
 * There is some FOUC (flash of unbehaviored content) when the front end page loads, since I am not handling the loading state gracefully.
 * See additional comments throughout code.
